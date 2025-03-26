@@ -7,3 +7,4 @@ class Game:
         self.genre = genre
         self.releaseDate = releaseDate
         self.rating = rating
+        self.suggestions = suggestions
