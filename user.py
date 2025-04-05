@@ -11,6 +11,7 @@ class User:
         self.email = email
         self.password = password
         self.profile = profile
+        self.wishlist = wishlist
         self.friends = friends
         self.blocked = blocked
 
