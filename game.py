@@ -1,7 +1,7 @@
 from datetime import date
 
 class Game:
-    def __init__(self, gameId: int, title: str, genre: str, releaseDate: date, rating: float):
+    def __init__(self, gameId: int, title: str, genre: str, releaseDate: date, rating: float, suggestions: str):
         self.gameId = gameId
         self.title = title
         self.genre = genre
