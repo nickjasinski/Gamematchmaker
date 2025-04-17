@@ -1,2 +1,2 @@
 # Gamematchmaker
-For IT 326's group project on a Game Match Maker
+For IT 326's group project

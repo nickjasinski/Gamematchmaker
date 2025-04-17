@@ -1,19 +1,15 @@
 from game import Game
-from preferences import Preferences
+from Gamematchmaker.preference import Preferences
 from review import Review
 from suggestion import Suggestion
 
 
 class User:
-    def __init__(self, userID: int, username: str, email: str, password: str, profile: profile, wishlist: wishlist, friends: List<friends>, blocked: List<user>):
+    def __init__(self, userID: int, username: str, email: str, password: str):
         self.userID = userID
         self.username = username
         self.email = email
         self.password = password
-        self.profile = profile
-        self.wishlist = wishlist
-        self.friends = friends
-        self.blocked = blocked
 
     def signUp(self, username: str, email: str, password: str) -> bool:
         pass

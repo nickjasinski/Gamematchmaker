@@ -1,4 +1,6 @@
 from controller import Controller
+from preferences import Preferences
+
 
 def main_menu():
     print("\n==== Video Game Finder ====")
@@ -15,7 +17,13 @@ def main_menu():
 
 def run():
     
-    current_user = None  # Placeholder for User 
+    controller = Controller()
+
+    preferences = Preferences(
+                preferenceId=1,
+                preferredGenre="RPG",
+                preferredPlatform="PC",
+                multiplayerPreference=True)
 
     while True:
         choice = main_menu()
@@ -39,7 +47,8 @@ def run():
             print("Adding ... to friends list\n")
 
         elif choice == '7':
-            print("Managing preferences ...\n")
+            
+            preferences.updatePreferences()
 
         elif choice == '0':
             print("Goodbye! See you soon!\n")
@@ -50,3 +59,5 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+
