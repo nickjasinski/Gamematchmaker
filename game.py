@@ -2,7 +2,7 @@ from datetime import date
 from typing import List, Optional
 
 class Game:
-    """Domain model representing a video game"""
+    """Constructor for a video game"""
     def __init__(
         self, 
         name: str,
@@ -19,6 +19,7 @@ class Game:
         self.rating = rating
         self.summary = summary
 
+    """String representation of the Game object"""
     def __str__(self):
         return (
             f"Title: {self.name or 'N/A'}\n"

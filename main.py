@@ -1,6 +1,4 @@
 from controller import Controller
-
-# main.py
 from igdb_fetcher import IGDBFetcher
 from game_service import GameService
 
