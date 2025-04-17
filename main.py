@@ -1,5 +1,10 @@
 from controller import Controller
 
+# main.py
+from igdb_fetcher import IGDBFetcher
+from game_service import GameService
+
+
 def main_menu():
     print("\n==== Video Game Finder ====")
     print("1. Sign Up")
@@ -16,7 +21,7 @@ def main_menu():
 def run():
     
     current_user = None  # Placeholder for User 
-
+    controller = Controller()
     while True:
         choice = main_menu()
 
@@ -27,7 +32,7 @@ def run():
             print("Logging in ...\n")
 
         elif choice == '3':
-            print("Searching for ...\n")
+            controller.search_game_by_title()
 
         elif choice == '4':
             print("Saving ... to wishlist ...\n")
@@ -50,3 +55,5 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+

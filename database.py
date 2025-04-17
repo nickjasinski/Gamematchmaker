@@ -1,6 +1,6 @@
 
 class Database:
-    def __init__(self, name: str, userID: int):
+    def __init__(self, name: str):
         self.name = name
 
     def getUser():
