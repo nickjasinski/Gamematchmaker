@@ -12,22 +12,37 @@ def main_menu():
     print("5. Write a Review")
     print("6. Add Friend")
     print("7. Manage Preferences")
+    print("8. Edit Profile")
+    print("9. Display Profile")
     print("0. Exit\n")
     return input("Choose an option: ")
-    
+
 
 def run():
-    
-    current_user = None  # Placeholder for User 
     controller = Controller()
+    current_user = None
+
     while True:
         choice = main_menu()
 
         if choice == '1':
             print("Signing up ...\n")
+            username = input("Enter username: ")
+            email = input("Enter email: ")
+            password = input("Enter password: ")
+            current_user = controller.signUp(username, email, password)
 
         elif choice == '2':
             print("Logging in ...\n")
+            email = input("Enter email: ")
+            password = input("Enter password: ")
+            current_user = controller.logIn(email, password)
+
+            if current_user:
+                print(
+                    f"\nLogin successful! Welcome, {current_user.username}.\n")
+            else:
+                print("Login failed. Please check your email and password.\n")
 
         elif choice == '3':
             controller.search_game_by_title()
@@ -37,21 +52,41 @@ def run():
 
         elif choice == '5':
             print("Writing a review ...\n")
-        
+
         elif choice == '6':
             print("Adding ... to friends list\n")
 
         elif choice == '7':
             print("Managing preferences ...\n")
 
+        elif choice == '8':
+            if current_user:
+                print("Editing profile...\n")
+                name = input("Enter your name: ")
+                favorite_game = input("Enter your favorite game: ")
+                bio = input("Write a short bio: ")
+                success = controller.editProfile(
+                    current_user, name, favorite_game, bio)
+                if success:
+                    print("Profile updated successfully!\n")
+                else:
+                    print("Failed to update profile.\n")
+            else:
+                print("Please log in first to edit your profile.\n")
+
+        elif choice == '9':
+            if current_user:
+                controller.displayProfile(current_user)
+            else:
+                print("You must be logged in to view your profile.\n")
+
         elif choice == '0':
             print("Goodbye! See you soon!\n")
             break
-        
+
         else:
-            print("Invalid choice. Please enter a number from 0 to 7.\n")
+            print("Invalid choice. Please enter a number from 0 to 8.\n")
+
 
 if __name__ == "__main__":
     run()
-
-
