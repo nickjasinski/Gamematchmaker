@@ -3,7 +3,7 @@ from typing import List
 from game import Game
 
 class Wishlist:
-    def __init__(self, weblistID: int,  Game: List<games>):
+    def __init__(self, weblistID: int,  Game: List[Game]):
         self.weblistID = weblistID
 
     def addGame(self, game: Game) -> bool:

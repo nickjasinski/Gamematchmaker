@@ -1,4 +1,5 @@
 from controller import Controller
+from loginservice import LoginService
 
 def main_menu():
     print("\n==== Video Game Finder ====")
@@ -16,6 +17,7 @@ def main_menu():
 def run():
     
     current_user = None  # Placeholder for User 
+    login_service = LoginService()
 
     while True:
         choice = main_menu()
@@ -25,6 +27,14 @@ def run():
 
         elif choice == '2':
             print("Logging in ...\n")
+            email = input("Enter your email: ")
+            password = input("Enter your password: ")
+
+            if login_service.isRegistered(email, password):
+                print("Login successsful! Welcome to GameMatch!")
+                current_user = email
+            else:
+                print("Login failed. Please try again.")
 
         elif choice == '3':
             print("Searching for ...\n")

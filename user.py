@@ -1,11 +1,14 @@
+from typing import List
 from game import Game
+from profile import Profile
+from wishlist import Wishlist
 from preferences import Preferences
 from review import Review
 from suggestion import Suggestion
 
 
 class User:
-    def __init__(self, userID: int, username: str, email: str, password: str, profile: profile, wishlist: wishlist, friends: List<friends>, blocked: List<user>):
+    def __init__(self, userID: int, username: str, email: str, password: str, profile: Profile = None, wishlist: Wishlist = None, friends: List['User'] = None, blocked: List['User'] = None):
         self.userID = userID
         self.username = username
         self.email = email
