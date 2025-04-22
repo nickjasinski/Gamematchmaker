@@ -46,5 +46,19 @@ class Controller:
             for game in games:
                 print(game)
                 print("-" * 150)
+
+    def search_recommended_games(self):
+        """Search for game recommendations"""
+        fetcher = IGDBFetcher()
+        service = GameService(fetcher)
+
+        while True:
+            search_term = input("\nEnter game title to find similar games (or 'q' to quit): ").strip()
+            if search_term.lower() == 'q':
+                break
+            print("\n")
+            recommendations = service.get_recommended_games(search_term)
             
-        
+            for game in recommendations:
+                    print(game)
+                    print("-" * 150)

@@ -14,6 +14,7 @@ def main_menu():
     print("7. Manage Preferences")
     print("8. Edit Profile")
     print("9. Display Profile")
+    print("10. Search for Game Recommendations")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -79,6 +80,10 @@ def run():
                 controller.displayProfile(current_user)
             else:
                 print("You must be logged in to view your profile.\n")
+                
+        elif choice == '10':
+            print("Searching for game recommendations ...\n")
+            controller.search_recommended_games()
 
         elif choice == '0':
             print("Goodbye! See you soon!\n")
