@@ -1,5 +1,7 @@
 from controller import Controller
-from loginservice import LoginService
+from igdb_fetcher import IGDBFetcher
+from game_service import GameService
+
 
 def main_menu():
     print("\n==== Video Game Finder ====")
@@ -10,53 +12,105 @@ def main_menu():
     print("5. Write a Review")
     print("6. Add Friend")
     print("7. Manage Preferences")
+    print("8. Edit Profile")
+    print("9. Display Profile")
+    print("10. Search for Game Recommendations")
     print("0. Exit\n")
     return input("Choose an option: ")
-    
+
 
 def run():
-    
-    current_user = None  # Placeholder for User 
-    login_service = LoginService()
+    controller = Controller()
+    current_user = None
 
     while True:
         choice = main_menu()
 
         if choice == '1':
             print("Signing up ...\n")
+            username = input("Enter username: ")
+            email = input("Enter email: ")
+            password = input("Enter password: ")
+            current_user = controller.signUp(username, email, password)
 
         elif choice == '2':
             print("Logging in ...\n")
-            email = input("Enter your email: ")
-            password = input("Enter your password: ")
+            email = input("Enter email: ")
+            password = input("Enter password: ")
+            current_user = controller.logIn(email, password)
 
-            if login_service.isRegistered(email, password):
-                print("Login successsful! Welcome to GameMatch!")
-                current_user = email
+            if current_user:
+                print(
+                    f"\nLogin successful! Welcome, {current_user.username}.\n")
             else:
-                print("Login failed. Please try again.")
+                print("Login failed. Please check your email and password.\n")
 
         elif choice == '3':
-            print("Searching for ...\n")
+            controller.search_game_by_title()
 
         elif choice == '4':
             print("Saving ... to wishlist ...\n")
 
         elif choice == '5':
-            print("Writing a review ...\n")
-        
+            if current_user:
+                print("Writing a review ...\n")
+
+                game_title = input("Enter the title of the game you want to review: ")
+                game = controller.search_game_by_title_return_game(game_title)
+
+                if game:
+                    content = input("Enter your review: ")
+                    rating = int(input("Enter a rating (1-5): "))
+
+                    new_review = current_user.writeReview(game, content, rating)
+
+                    controller.saveReview(new_review)
+
+                    print("Review was submitted successfully!\n")
+
+                else:
+                    print("Game not found. Please try again.\n")
+            else:
+                print("You must be logged in to write a review.\n")
+
         elif choice == '6':
             print("Adding ... to friends list\n")
 
         elif choice == '7':
             print("Managing preferences ...\n")
 
+        elif choice == '8':
+            if current_user:
+                print("Editing profile...\n")
+                name = input("Enter your name: ")
+                favorite_game = input("Enter your favorite game: ")
+                bio = input("Write a short bio: ")
+                success = controller.editProfile(
+                    current_user, name, favorite_game, bio)
+                if success:
+                    print("Profile updated successfully!\n")
+                else:
+                    print("Failed to update profile.\n")
+            else:
+                print("Please log in first to edit your profile.\n")
+
+        elif choice == '9':
+            if current_user:
+                controller.displayProfile(current_user)
+            else:
+                print("You must be logged in to view your profile.\n")
+                
+        elif choice == '10':
+            print("Searching for game recommendations ...\n")
+            controller.search_recommended_games()
+
         elif choice == '0':
             print("Goodbye! See you soon!\n")
             break
-        
+
         else:
-            print("Invalid choice. Please enter a number from 0 to 7.\n")
+            print("Invalid choice. Please enter a number from 0 to 8.\n")
+
 
 if __name__ == "__main__":
     run()
