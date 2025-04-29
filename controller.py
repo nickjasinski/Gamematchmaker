@@ -58,9 +58,18 @@ class Controller:
         else:
             return None
         
-        
+
     def saveReview(self, review):
         self.data_handler.saveReview(review)
+
+    def getReviewById(self, review_id):
+        return self.data_handler.getReviewById(review_id)
+    
+    def likeReview(self, review):
+        self.data_handler.likeReview(review)
+
+    def dislikeReview(self, review):
+        self.data_handler.dislikeReview(review)
 
     def search_recommended_games(self):
         """Search for game recommendations"""

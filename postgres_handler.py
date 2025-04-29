@@ -74,6 +74,46 @@ class PostgresHandler(AbstractDataHandler):
         review.reviewId = review_id
     
 
+    def likeReview(self, review: Review):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+        UPDATE reviews
+        SET likes = likes + 1
+        WHERE review_id = %s
+    """, (review.reviewId,))
+        
+        self.postgres.getConnection().commit()
+
+    def dislikeReview(self, review: Review):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+        UPDATE reviews
+        SET dislikes = dislikes + 1
+        WHERE review_id = %s
+    """, (review.reviewId,))
+
+        self.postgres.getConnection().commit()
+    
+    def getReviewById(self, review_id: int):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+        SELECT * FROM reviews WHERE review_id = %s
+    """, (review_id,))
+        result = cursor.fetchone()
+    
+        if result:
+            return Review(
+                reviewId=result['review_id'],
+                userID=result['user_id'],
+                gameID=result['game_id'],
+                content=result['content'],
+                rating=result['rating'],
+                likes=result.get('likes', 0),
+                dislikes=result.get('dislikes', 0)
+            )
+        else:
+            return None
+
     def savePreference(self, preferences: Preferences):
         pass
 

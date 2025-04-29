@@ -10,11 +10,13 @@ def main_menu():
     print("3. Search for Game Title")
     print("4. Save Game to Wishlist")
     print("5. Write a Review")
-    print("6. Add Friend")
-    print("7. Manage Preferences")
-    print("8. Edit Profile")
-    print("9. Display Profile")
-    print("10. Search for Game Recommendations")
+    print("6. Like a Review")
+    print("7. Dislike a Review")
+    print("8. Add Friend")
+    print("9. Manage Preferences")
+    print("10. Edit Profile")
+    print("11. Display Profile")
+    print("12. Search for Game Recommendations")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -73,13 +75,33 @@ def run():
             else:
                 print("You must be logged in to write a review.\n")
 
+        
         elif choice == '6':
-            print("Adding ... to friends list\n")
-
+            review_id = int(input("Enter the Review ID to like: "))
+            review = controller.getReviewById(review_id)
+            if review:
+                controller.likeReview(review)
+                print("You liked the review!")
+            else:
+                print("Review not found.")
+        
         elif choice == '7':
-            print("Managing preferences ...\n")
+            review_id = int(input("Enter the Review ID to dislike: "))
+            review = controller.getReviewById(review_id)
+            if review:
+                controller.dislikeReview(review)
+                print("You disliked the review!")
+            else:
+                print("Review not found.")
+
 
         elif choice == '8':
+            print("Adding ... to friends list\n")
+
+        elif choice == '9':
+            print("Managing preferences ...\n")
+
+        elif choice == '10':
             if current_user:
                 print("Editing profile...\n")
                 name = input("Enter your name: ")
@@ -94,13 +116,13 @@ def run():
             else:
                 print("Please log in first to edit your profile.\n")
 
-        elif choice == '9':
+        elif choice == '11':
             if current_user:
                 controller.displayProfile(current_user)
             else:
                 print("You must be logged in to view your profile.\n")
                 
-        elif choice == '10':
+        elif choice == '12':
             print("Searching for game recommendations ...\n")
             controller.search_recommended_games()
 
