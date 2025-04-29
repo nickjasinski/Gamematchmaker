@@ -38,6 +38,18 @@ class AbstractDataHandler(ABC):
         pass
 
     @abstractmethod
+    def saveProfile(self, profile):
+        pass
+
+    @abstractmethod
+    def likeReview(self, review: Review):
+        pass
+
+    @abstractmethod
+    def dislikeReview(self, review: Review):
+        pass
+
+    @abstractmethod
     def deleteUser(self, user: User):
         pass
 
@@ -63,4 +75,8 @@ class AbstractDataHandler(ABC):
 
     @abstractmethod
     def getUserByCredentials(self, email, password): 
+        pass
+
+    @abstractmethod
+    def getReviewById(self, review_id: int):
         pass
