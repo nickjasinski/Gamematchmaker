@@ -4,7 +4,8 @@ from typing import List, Optional
 class Game:
     """Constructor for a video game"""
     def __init__(
-        self, 
+        self,
+        gameID: int, 
         name: str,
         genres: List[str],
         platforms: List[str],
@@ -13,6 +14,7 @@ class Game:
         summary: Optional[str]
     ):
         self.name = name
+        self.gameID = gameID
         self.genres = genres
         self.platforms = platforms
         self.release_date = release_date

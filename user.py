@@ -14,7 +14,7 @@ class User:
                  email: str,
                  password: str,
                  profile: Optional[Profile] = None,
-                 wishlist: Optional[Wishlist] = None,
+                 wishlist: Optional[str] = None,
                  friends: Optional[List['User']] = None,
                  blocked: Optional[List['User']] = None):
         self.userID = userID
@@ -68,7 +68,13 @@ class User:
         return self.wishlist.removeGame(game)
 
     def writeReview(self, game: Game, content: str, rating: int) -> Review:
-        return Review(game=game, userID=self.userID, content=content, rating=rating)
+        return Review(
+            reviewId = None,      
+            userID = self.userID,
+            gameID = game.gameID,       
+            content = content,
+            rating = rating
+    )
 
     def likeReview(self, review: Review):
         review.like()

@@ -74,6 +74,7 @@ class GameService:
         print("\nGENRE-BASED RECOMMENDATIONS:\n")
         return [self._create_game_object(g) for g in list(genre_games.values())[:5]]
 
+    # Helper function to fetch game names by IDs 
     def get_game_names_by_ids(self, game_ids: List[str]) -> List[Dict]:
         """Fetches full game data for a list of game IDs"""
         if not game_ids:
@@ -86,8 +87,11 @@ class GameService:
         """
         return self.fetcher.fetch_games_by_query(game_details_query) or []
 
+    # Helper function to create Game objects
     def _create_game_object(self, game_data: Dict) -> Game:
-        """Properly creates Game object with nested data handling"""
+        """Properly creates Game object with data handling"""
+        if not isinstance(game_data, dict):
+            raise ValueError("Invalid game data format")
         genres = [g["name"] if isinstance(g, dict) else g for g in game_data.get("genres", [])]
         platforms = [p["name"] if isinstance(p, dict) else p for p in game_data.get("platforms", [])]
         release_date = None
@@ -97,6 +101,7 @@ class GameService:
                 release_date = datetime.fromtimestamp(min(valid_dates)).date()
 
         return Game(
+            gameID=game_data.get("id"),
             name=game_data.get("name", "Unknown"),
             genres=genres,
             platforms=platforms,

@@ -1,6 +1,8 @@
 from igdb_fetcher import IGDBFetcher
 from game_service import GameService
 from user import User
+import wishlist
+from wishlist_service import WishlistService
 
 class Controller:
     def __init__(self):
@@ -62,3 +64,44 @@ class Controller:
             for game in recommendations:
                     print(game)
                     print("-" * 150)
+
+    def manage_wishlist(self, user: User):
+        """Manage user's wishlist"""
+        service = WishlistService(self.data_handler)
+
+        while True:
+            print("\n--- Wishlist Management ---")
+            print("1. Add game to wishlist")
+            print("2. Remove game from wishlist")
+            print("3. View wishlist")
+            print("4. Back to main menu")
+
+            choice = input("\nEnter your choice: ")
+
+            if choice == '1':
+                game_title = input("\nEnter the title of the game to add: ")
+                service.addGame(game_title, user.userID)
+            elif choice == '2':
+                game_title = input("\nEnter the title of the game to remove: ")
+                service.removeGame(game_title, user.userID) 
+            elif choice == '3':
+                wishlist = service.getWishlist(user.userID)
+                print("\n--- Your Wishlist ---")
+                for game in wishlist.games:
+                    print(f"- {game}")
+            elif choice == '4':
+                return
+
+    def saveReview(self, review):
+        self.data_handler.saveReview(review)
+
+    def search_game_by_title_return_game(self, title):
+        fetcher = IGDBFetcher()
+        service = GameService(fetcher)
+
+        games = service.search_games(title)
+    
+        if games:
+            return games[0] 
+        else:
+            return None

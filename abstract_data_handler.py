@@ -26,7 +26,7 @@ class AbstractDataHandler(ABC):
         pass
 
     @abstractmethod
-    def saveWishlist(self, wishlist: Wishlist):
+    def saveWishlist(self, wishlist: Wishlist, user_id: int):
         pass
 
     @abstractmethod
@@ -47,10 +47,6 @@ class AbstractDataHandler(ABC):
 
     @abstractmethod
     def deletePreference(self, preferences: Preferences):
-        pass
-
-    @abstractmethod
-    def deleteWishlist(self, wishlist: Wishlist):
         pass
 
     @abstractmethod
