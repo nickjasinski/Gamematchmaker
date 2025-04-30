@@ -21,6 +21,12 @@ class Controller:
 
     def editProfile(self, user, name, favorite_game, bio):
         return self.profile_service.editProfile(name, favorite_game, bio, user)
+    
+    def deleteProfile(self, user: User):
+        self.data_handler.deleteProfile(user.userID)
+        user.profile = None
+        print("Profile deleted successfully.")
+
 
     def displayProfile(self, user):
         if user.profile:

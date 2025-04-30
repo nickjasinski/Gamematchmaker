@@ -18,6 +18,7 @@ def main_menu():
     print("10. Edit Profile")
     print("11. Display Profile")
     print("12. Search for Game Recommendations")
+    print("13. Delete Profile")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -39,6 +40,20 @@ def run():
             email = input("Enter email: ")
             password = input("Enter password: ")
             current_user = controller.signUp(username, email, password)
+
+            # Ask to create a profile
+            if current_user:
+                choice_profile = input("Would you like to create a profile now? (yes/no): ").strip().lower()
+
+                if choice_profile == 'yes':
+                    name = input("Enter your name: ")
+                    favorite_game = input("Enter your favorite game: ")
+                    bio = input("Write a short bio: ")
+                    controller.editProfile(current_user, name, favorite_game, bio)
+                else:
+                    # Save empty profile
+                    controller.editProfile(current_user, "", "", "")
+                    print("Profile skipped. You can create it later from the menu.")
 
         elif choice == '2': #Log in
             print("Logging in ...\n")
@@ -133,6 +148,16 @@ def run():
             print("Searching for game recommendations ...\n")
             controller.search_recommended_games()
  
+        elif choice == '13':  # Delete Profile
+            if current_user and current_user.profile:
+                confirm = input("Are you sure you want to delete your profile? (yes/no): ")
+                if confirm.lower() == "yes":
+                    controller.deleteProfile(current_user)
+                else:
+                    print("Profile deletion canceled.")
+            else:
+                print("No profile found or not logged in.")
+
         elif choice == '0': #Exit
             print("Goodbye! See you soon!\n")
             break

@@ -30,11 +30,24 @@ class PostgresHandler(AbstractDataHandler):
     def saveProfile(self, profile):
         cursor = self.postgres.getSession()
         cursor.execute("""
-            UPDATE profiles
-            SET name = %s, favorite_game = %s, bio = %s
-            WHERE user_id = %s
-        """, (profile.name, profile.favorite_game, profile.bio, profile.user.userID))
+            INSERT INTO profiles (user_id, name, favorite_game, bio)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (user_id)
+            DO UPDATE SET name = EXCLUDED.name,
+                          favorite_game = EXCLUDED.favorite_game,
+                          bio = EXCLUDED.bio
+        """, (profile.user.userID, profile.name, profile.favorite_game, profile.bio))
         self.postgres.getConnection().commit()
+
+    # Deletes the profile from the database
+    def deleteProfile(self, user_id: int):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+            DELETE FROM profiles
+            WHERE user_id = %s
+        """, (user_id,))
+        self.postgres.getConnection().commit()
+
 
     # Fetches the profile for the specified user_id from the database
     def getProfile(self, user_id):
