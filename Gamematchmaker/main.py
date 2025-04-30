@@ -13,10 +13,11 @@ def main_menu():
     print("5. Write a Review")
     print("6. Add Friend")
     print("7. Remove Friend")
-    print("8. Manage Preferences")
-    print("9. Edit Profile")
-    print("10. Display Profile")
-    print("11. Search for Game Recommendations")
+    print("8. View Friend's Profile")
+    print("9. Manage Preferences")
+    print("10. Edit Profile")
+    print("11. Display Profile")
+    print("12. Search for Game Recommendations")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -108,11 +109,17 @@ def run():
             else:
                 print("Please log in first to remove friends.\n")
 
+        elif choice == '8':  # View friend's profile
+            if current_user:
+                email = input("Enter your friend's email: ")
+                controller.view_friend_profile(current_user, email)
+            else:
+                print("Please log in first to view a friend's profile.\n")
 
-        elif choice == '8': #Manage preferences
+        elif choice == '9': #Manage preferences
             preferences.updatePreferences()
 
-        elif choice == '9': #Edit profile
+        elif choice == '10': #Edit profile
             if current_user:
                 print("Editing profile...\n")
                 name = input("Enter your name: ")
@@ -127,13 +134,13 @@ def run():
             else:
                 print("Please log in first to edit your profile.\n")
 
-        elif choice == '10': #Display profile
+        elif choice == '11': #Display profile
             if current_user:
                 controller.displayProfile(current_user)
             else:
                 print("You must be logged in to view your profile.\n")
                 
-        elif choice == '11': #Game recommendations
+        elif choice == '12': #Game recommendations
             print("Searching for game recommendations ...\n")
             controller.search_recommended_games()
  

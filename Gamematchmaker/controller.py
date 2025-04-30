@@ -120,3 +120,29 @@ class Controller:
         friendship = Friend(user, friend)
         friendship.remove()
         self.data_handler.deleteFriend(friendship)
+
+        def view_friend_profile(self, user, friend_email):
+            friend = self.data_handler.getUserByEmail(friend_email)
+
+            if not friend:
+                print("User not found.")
+                return
+
+            # Check if the friend is actually in the user's friend list
+            if friend not in user.friends:
+                print("This user is not in your friend list.")
+                return
+
+            # Fetch the full profile data
+            profile_data = self.data_handler.getProfile(friend.userID)
+
+            if not profile_data:
+                print("This user has no profile.")
+                return
+
+            print("\n==== Friend Profile ====")
+            print(f"Name: {profile_data['name']}")
+            print(f"Favorite Game: {profile_data['favorite_game']}")
+            print(f"Bio: {profile_data['bio']}")
+            print("========================\n")
+
