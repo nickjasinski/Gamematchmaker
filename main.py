@@ -1,5 +1,7 @@
 from controller import Controller
 from preferences import Preferences
+from block import Block
+from suggestion import Suggestion
 
 
 def main_menu():
@@ -11,6 +13,7 @@ def main_menu():
     print("5. Write a Review")
     print("6. Add Friend")
     print("7. Manage Preferences")
+    print("8. View Blocked Menu")
     print("0. Exit\n")
     return input("Choose an option: ")
     
@@ -24,6 +27,12 @@ def run():
                 preferredGenre="RPG",
                 preferredPlatform="PC",
                 multiplayerPreference=True)
+
+    blocker = Block(user = "placeholder")
+
+    suggest = Suggestion(
+                suggestionId=1,
+                content="fix bugs in the game")
 
     while True:
         choice = main_menu()
@@ -49,6 +58,12 @@ def run():
         elif choice == '7':
             
             preferences.updatePreferences()
+
+        elif choice == '8':
+            blocker.blockusers()
+
+        elif choice == '9':
+            suggest.addSuggestion()
 
         elif choice == '0':
             print("Goodbye! See you soon!\n")

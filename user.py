@@ -1,5 +1,5 @@
 from game import Game
-from Gamematchmaker.preference import Preferences
+from preferences import Preferences
 from review import Review
 from suggestion import Suggestion
 

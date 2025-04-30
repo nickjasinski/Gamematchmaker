@@ -14,7 +14,7 @@ class Preferences:
         while True:
             print("")
             print("Which Preference would you like to edit?")
-            print("1. Change Preferred Game")
+            print("1. Change Preferred Genre")
             print("2. Change Preferred Platform")
             print("3. Change Multiplayer Preference")
             print("")
@@ -25,7 +25,6 @@ class Preferences:
             choice = input("\nEnter preference (or 'q' to quit): ").strip()
             if choice.lower() == 'q':
                 break
-            print("\n")
             if choice == "1":
                 print("Changing Preferred Genre")
                 new_genre = input("What Genre would you like to have? ")
