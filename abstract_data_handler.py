@@ -80,3 +80,7 @@ class AbstractDataHandler(ABC):
     @abstractmethod
     def getReviewById(self, review_id: int):
         pass
+
+    @abstractmethod
+    def getUserByEmail(self, email):
+        pass

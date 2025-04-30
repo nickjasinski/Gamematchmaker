@@ -152,7 +152,34 @@ class PostgresHandler(AbstractDataHandler):
         pass
 
     def saveFriend(self, friend: Friend):
-        pass
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+            INSERT INTO friends (user_id, friend_id)
+            VALUES (%s, %s), (%s, %s)
+            ON CONFLICT DO NOTHING
+        """, (
+            friend.user.userID, friend.friend.userID,
+            friend.friend.userID, friend.user.userID 
+        ))
+        self.postgres.getConnection().commit()
+
+    def getUserByEmail(self, email):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+            SELECT * FROM users WHERE email = %s
+        """, (email,))
+        result = cursor.fetchone()
+
+        if result:
+            from user import User
+            return User(
+                userID=result['user_id'],
+                username=result['username'],
+                email=result['email'],
+                password=result['password']
+            )
+        else:
+            return None
 
     def deleteUser(self, user: User):
         pass
@@ -167,4 +194,13 @@ class PostgresHandler(AbstractDataHandler):
         pass
 
     def deleteFriend(self, friend: Friend):
-        pass
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+            DELETE FROM friends
+            WHERE (user_id = %s AND friend_id = %s)
+            OR (user_id = %s AND friend_id = %s)
+        """, (
+            friend.user.userID, friend.friend.userID,
+            friend.friend.userID, friend.user.userID
+        ))
+        self.postgres.getConnection().commit()

@@ -114,3 +114,18 @@ class Controller:
             return games[0] 
         else:
             return None
+        
+    def add_friend(self, user, friend):
+        from friend import Friend
+        friendship = Friend(user, friend)
+        friendship.add()
+        self.data_handler.saveFriend(friendship)
+
+    def get_user_by_email(self, email):
+        return self.data_handler.getUserByEmail(email)
+    
+    def remove_friend(self, user, friend):
+        from friend import Friend
+        friendship = Friend(user, friend)
+        friendship.remove()
+        self.data_handler.deleteFriend(friendship)

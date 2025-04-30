@@ -14,10 +14,12 @@ def main_menu():
     print("6. Like a Review")
     print("7. Dislike a Review")
     print("8. Add Friend")
-    print("9. Manage Preferences")
-    print("10. Edit Profile")
-    print("11. Display Profile")
-    print("12. Search for Game Recommendations")
+    print("9. Remove Friend")
+    print("10. View Friends List")
+    print("11. Manage Preferences")
+    print("12. Edit Profile")
+    print("13. Display Profile")
+    print("14. Search for Game Recommendations")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -102,13 +104,42 @@ def run():
             else:
                 print("Review not found.")
 
-        elif choice == '8': #Add friend
-            print("Adding ... to friends list\n")
+        elif choice == '8':  # Add friend
+            if current_user:
+                friend_email = input("Enter the email of the friend to add: ")
+                friend_user = controller.get_user_by_email(friend_email)
 
-        elif choice == '9': #Manage preferences
+                if friend_user:
+                    controller.add_friend(current_user, friend_user)
+                else:
+                    print("No user found with that email.\n")
+            else:
+                print("Please log in first to add friends.\n")
+
+
+        elif choice == '9':  # Remove friend
+            if current_user:
+                friend_email = input("Enter the email of the friend to remove: ")
+                friend_user = controller.get_user_by_email(friend_email)
+
+                if friend_user:
+                    controller.remove_friend(current_user, friend_user)
+                else:
+                    print("No user found with that email.\n")
+            else:
+                print("Please log in first to remove friends.\n")
+
+        elif choice == '10': #View friends list
+            if current_user:
+                print("Fetching friends list...\n")
+                #controller.viewFriendsList(current_user)
+            else:
+                print("Please log in first to view your friends list.\n")
+
+        elif choice == '11': #Manage preferences
             preferences.updatePreferences()
 
-        elif choice == '10': #Edit profile
+        elif choice == '12': #Edit profile
             if current_user:
                 print("Editing profile...\n")
                 name = input("Enter your name: ")
@@ -123,13 +154,13 @@ def run():
             else:
                 print("Please log in first to edit your profile.\n")
 
-        elif choice == '11': #Display profile
+        elif choice == '13': #Display profile
             if current_user:
                 controller.displayProfile(current_user)
             else:
                 print("You must be logged in to view your profile.\n")
                 
-        elif choice == '12': #Game recommendations
+        elif choice == '14': #Game recommendations
             print("Searching for game recommendations ...\n")
             controller.search_recommended_games()
  
