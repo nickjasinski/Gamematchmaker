@@ -27,10 +27,17 @@ class Controller:
         user.profile = None
         print("Profile deleted successfully.")
 
+    def deleteProfile(self, user: User):
+        success = self.profile_service.deleteProfile(user)
+        if success:
+            print("Profile deleted successfully.")
+        else:
+            print("Failed to delete profile.")
 
     def displayProfile(self, user):
-        if user.profile:
-            profile = user.profile
+        profile = self.profile_service.getProfile(user)
+
+        if profile:
             print("\n--- Profile Information ---")
             print(f"Name: {profile.name}")
             print(f"Favorite Game: {profile.favorite_game}")

@@ -19,6 +19,7 @@ def main_menu():
     print("11. Display Profile")
     print("12. Search for Game Recommendations")
     print("13. Delete Profile")
+    print("14. Log Out")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -157,6 +158,14 @@ def run():
                     print("Profile deletion canceled.")
             else:
                 print("No profile found or not logged in.")
+
+        elif choice == '14':  # Log Out
+            if current_user:
+                current_user.logOut()
+                current_user = None
+            else:
+                print("No user is currently logged in.")
+
 
         elif choice == '0': #Exit
             print("Goodbye! See you soon!\n")
