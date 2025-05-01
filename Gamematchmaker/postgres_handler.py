@@ -30,10 +30,13 @@ class PostgresHandler(AbstractDataHandler):
     def saveProfile(self, profile):
         cursor = self.postgres.getSession()
         cursor.execute("""
-            UPDATE profiles
-            SET name = %s, favorite_game = %s, bio = %s
-            WHERE user_id = %s
-        """, (profile.name, profile.favorite_game, profile.bio, profile.user.userID))
+            INSERT INTO profiles (user_id, name, favorite_game, bio)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (user_id)
+            DO UPDATE SET name = EXCLUDED.name,
+                          favorite_game = EXCLUDED.favorite_game,
+                          bio = EXCLUDED.bio
+        """, (profile.user.userID, profile.name, profile.favorite_game, profile.bio))
         self.postgres.getConnection().commit()
 
     # Fetches the profile for the specified user_id from the database
@@ -44,6 +47,7 @@ class PostgresHandler(AbstractDataHandler):
         """, (user_id,))
         data = cursor.fetchone()
         return data
+
 
     # Fetches the user from the database by email and password
     def getUserByCredentials(self, email, password):
@@ -108,36 +112,23 @@ class PostgresHandler(AbstractDataHandler):
     def saveSuggestion(self, suggestion: Suggestion):
         pass
 
-    def saveFriend(self, friend: Friend):
+    def saveFriend(self, user: User, friend: User):
         cursor = self.postgres.getSession()
-        cursor.execute("""
-            INSERT INTO friends (user_id, friend_id)
-            VALUES (%s, %s), (%s, %s)
-            ON CONFLICT DO NOTHING
-        """, (
-            friend.user.userID, friend.friend.userID,
-            friend.friend.userID, friend.user.userID 
-        ))
-        self.postgres.getConnection().commit()
 
-    def getUserByEmail(self, email):
-        cursor = self.postgres.getSession()
+        # Get current friend list
         cursor.execute("""
-            SELECT * FROM users WHERE email = %s
-        """, (email,))
+            SELECT friends FROM users WHERE user_id = %s
+        """, (user.userID,))
         result = cursor.fetchone()
+        current_friends = result['friends'] if result and result['friends'] else []
 
-        if result:
-            from user import User
-            return User(
-                userID=result['user_id'],
-                username=result['username'],
-                email=result['email'],
-                password=result['password']
-            )
-        else:
-            return None
-
+        # Avoid duplicates
+        if friend.email not in current_friends:
+            current_friends.append(friend.email)
+            cursor.execute("""
+                UPDATE users SET friends = %s WHERE user_id = %s
+            """, (current_friends, user.userID))
+            self.postgres.getConnection().commit()
 
 
     def deleteUser(self, user: User):
@@ -152,14 +143,36 @@ class PostgresHandler(AbstractDataHandler):
     def deleteSuggestion(self, suggestion: Suggestion):
         pass
 
-    def deleteFriend(self, friend: Friend):
+    def deleteFriend(self, user: User, friend: User):
         cursor = self.postgres.getSession()
+
+        # Get current friends
         cursor.execute("""
-            DELETE FROM friends
-            WHERE (user_id = %s AND friend_id = %s)
-            OR (user_id = %s AND friend_id = %s)
-        """, (
-            friend.user.userID, friend.friend.userID,
-            friend.friend.userID, friend.user.userID
-        ))
-        self.postgres.getConnection().commit()
+            SELECT friends FROM users WHERE user_id = %s
+        """, (user.userID,))
+        result = cursor.fetchone()
+        current_friends = result['friends'] if result and result['friends'] else []
+
+        # Remove if exists
+        if friend.email in current_friends:
+            current_friends.remove(friend.email)
+            cursor.execute("""
+                UPDATE users SET friends = %s WHERE user_id = %s
+            """, (current_friends, user.userID))
+            self.postgres.getConnection().commit()
+
+    #helper function
+    def getUserByEmail(self, email):
+        cursor = self.postgres.getSession()
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+        result = cursor.fetchone()
+        if result:
+            return User(
+                userID=result['user_id'],
+                username=result['username'],
+                email=result['email'],
+                password=result['password']
+            )
+        return None
+
+

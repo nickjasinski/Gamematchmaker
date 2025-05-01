@@ -90,9 +90,10 @@ def run():
                 friend_user = controller.get_user_by_email(friend_email)
 
                 if friend_user:
-                    controller.add_friend(current_user, friend_user)
+                    controller.addFriend(current_user, friend_user)
                 else:
                     print("No user found with that email.\n")
+
             else:
                 print("Please log in first to add friends.\n")
 
@@ -103,18 +104,24 @@ def run():
                 friend_user = controller.get_user_by_email(friend_email)
 
                 if friend_user:
-                    controller.remove_friend(current_user, friend_user)
+                    controller.removeFriend(current_user, friend_user)
                 else:
                     print("No user found with that email.\n")
             else:
                 print("Please log in first to remove friends.\n")
 
-        elif choice == '8':  # View friend's profile
+        elif choice == '8':  # View Friend's Profile
             if current_user:
-                email = input("Enter your friend's email: ")
-                controller.view_friend_profile(current_user, email)
+                friend_email = input("Enter your friend's email: ")
+                friend_user = controller.get_user_by_email(friend_email)
+
+                if friend_user:
+                    controller.displayProfile(friend_user)
+                else:
+                    print("No user found with that email.\n")
             else:
-                print("Please log in first to view a friend's profile.\n")
+                print("Please log in first to view friend profiles.\n")
+
 
         elif choice == '9': #Manage preferences
             preferences.updatePreferences()

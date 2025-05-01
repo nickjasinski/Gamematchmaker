@@ -23,8 +23,9 @@ class Controller:
         return self.profile_service.editProfile(name, favorite_game, bio, user)
 
     def displayProfile(self, user):
-        if user.profile:
-            profile = user.profile
+        profile = self.profile_service.getProfile(user)
+
+        if profile:
             print("\n--- Profile Information ---")
             print(f"Name: {profile.name}")
             print(f"Favorite Game: {profile.favorite_game}")
@@ -106,43 +107,13 @@ class Controller:
         else:
             return None
         
-    def add_friend(self, user, friend):
-        from friend import Friend
-        friendship = Friend(user, friend)
-        friendship.add()
-        self.data_handler.saveFriend(friendship)
+    def addFriend(self, current_user: User, friend_user: User):
+        self.data_handler.saveFriend(current_user, friend_user)
+        print(f"{friend_user.username} has been added to your friend list.")
+
+    def removeFriend(self, current_user: User, friend_user: User):
+        self.data_handler.deleteFriend(current_user, friend_user)
+        print(f"{friend_user.username} has been removed from your friend list.")
 
     def get_user_by_email(self, email):
         return self.data_handler.getUserByEmail(email)
-    
-    def remove_friend(self, user, friend):
-        from friend import Friend
-        friendship = Friend(user, friend)
-        friendship.remove()
-        self.data_handler.deleteFriend(friendship)
-
-        def view_friend_profile(self, user, friend_email):
-            friend = self.data_handler.getUserByEmail(friend_email)
-
-            if not friend:
-                print("User not found.")
-                return
-
-            # Check if the friend is actually in the user's friend list
-            if friend not in user.friends:
-                print("This user is not in your friend list.")
-                return
-
-            # Fetch the full profile data
-            profile_data = self.data_handler.getProfile(friend.userID)
-
-            if not profile_data:
-                print("This user has no profile.")
-                return
-
-            print("\n==== Friend Profile ====")
-            print(f"Name: {profile_data['name']}")
-            print(f"Favorite Game: {profile_data['favorite_game']}")
-            print(f"Bio: {profile_data['bio']}")
-            print("========================\n")
-

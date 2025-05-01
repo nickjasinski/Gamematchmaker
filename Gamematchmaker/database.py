@@ -14,3 +14,6 @@ class Database:
 
     def getWishlist():
         pass
+
+    def getFriend():
+        pass
