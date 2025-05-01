@@ -24,7 +24,7 @@ class Block:
                 if add.lower() == 'q':
                     continue
                 self.blocked_users.append(add)
-                print(f"{add} has been blocked!")
+                print(f"\n{add} has been blocked!")
 
             elif choice == "2":
                 print("\nBlocked Users:")
@@ -40,9 +40,9 @@ class Block:
                     continue
                 if remove in self.blocked_users:
                     self.blocked_users.remove(remove)
-                    print(f"{remove} has been unblocked!")
+                    print(f"\n{remove} has been unblocked!")
                 else:
-                    print(f"{remove} was not in your blocked list.")
+                    print(f"\n{remove} was not in your blocked list.")
 
             else:
                 print("Invalid option.")

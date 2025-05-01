@@ -14,10 +14,10 @@ def main_menu():
     print("5. Review Menu")
     print("6. Friend Menu")
     print("7. Block Menu")
-    print("8. Manage Preferences")
-    print("9. Edit Profile")
-    print("10. Display Profile")
-    print("11. Search for Game Recommendations")
+    print("8. Profile Menu")
+    print("9. Manage Preferences")
+    
+    print("10. Search for Game Recommendations")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -160,31 +160,56 @@ def run():
 
         elif choice == '7':
             blocker.blockusers()
-        elif choice == '8': #Manage preferences
+
+        elif choice == '8': #Profile menu
+            while True:
+                print("\nWhat would you like to do?")
+                print("1. Edit Profile")
+                print("2. Display Profile")
+                print("3. Delete Profile")
+                choice = input("\nEnter selection (or 'q' to quit:) ").strip()
+
+                if choice.lower() == 'q':
+                    print("\nExiting Profile Menu.\n")
+                    break
+
+            
+                elif choice == '1': #Edit profile
+                    if current_user:
+                        print("Editing profile...\n")
+                        name = input("Enter your name: ")
+                        favorite_game = input("Enter your favorite game: ")
+                        bio = input("Write a short bio: ")
+                        success = controller.editProfile(
+                            current_user, name, favorite_game, bio)
+                        if success:
+                            print("Profile updated successfully!\n")
+                        else:
+                            print("Failed to update profile.\n")
+                    else:
+                        print("Please log in first to edit your profile.\n")
+
+                elif choice == '2': #Display profile
+                    if current_user:
+                        controller.displayProfile(current_user)
+                    else:
+                        print("You must be logged in to view your profile.\n")
+
+                elif choice == '3':  # Delete Profile
+                    if current_user and current_user.profile:
+                        confirm = input("Are you sure you want to delete your profile? (yes/no): ")
+                        if confirm.lower() == "yes":
+                            controller.deleteProfile(current_user)
+                        else:
+                            print("Profile deletion canceled.")
+                    else:
+                        print("No profile found or not logged in.")
+
+        elif choice == '9': #Manage preferences
             preferences.updatePreferences()
 
-        elif choice == '9': #Edit profile
-            if current_user:
-                print("Editing profile...\n")
-                name = input("Enter your name: ")
-                favorite_game = input("Enter your favorite game: ")
-                bio = input("Write a short bio: ")
-                success = controller.editProfile(
-                    current_user, name, favorite_game, bio)
-                if success:
-                    print("Profile updated successfully!\n")
-                else:
-                    print("Failed to update profile.\n")
-            else:
-                print("Please log in first to edit your profile.\n")
-
-        elif choice == '10': #Display profile
-            if current_user:
-                controller.displayProfile(current_user)
-            else:
-                print("You must be logged in to view your profile.\n")
                 
-        elif choice == '11': #Game recommendations
+        elif choice == '10': #Game recommendations
             print("Searching for game recommendations ...\n")
             controller.search_recommended_games()
  
