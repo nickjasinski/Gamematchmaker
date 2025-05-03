@@ -68,6 +68,7 @@ def run():
                 print("1. Write a review")
                 print("2. Like a Review")
                 print("3. Dislike a Review")
+                print("4. View a Review")
                 choice = input("\nEnter selection (or 'q' to quit:) ").strip()
 
                 if choice.lower() == 'q':
@@ -113,6 +114,9 @@ def run():
                         print("You disliked the review!")
                     else:
                         print("Review not found.")
+                if choice == '4': # view reviews
+                    review_id = input("Enter the review ID you want to view: ")
+                    controller.view_review_by_id(review_id)
 
         elif choice == '6':
             """Friend Menu"""
@@ -120,41 +124,54 @@ def run():
                 print("\nWhat would you like to do?")
                 print("1. Add Friend")
                 print("2. Remove Friend")
-                print("3. View Friends List")
+                print("3. View Friend's Profile")
+                print("4. View Friends List")
                 choice = input("\nEnter selection (or 'q' to quit:) ").strip()
 
                 if choice.lower() == 'q':
                     print("\nExiting Review Menu.\n")
                     break
                 
-                if choice == '1':
+                if choice == '1': # Add friend
                     if current_user:
                         friend_email = input("Enter the email of the friend to add: ")
                         friend_user = controller.get_user_by_email(friend_email)
 
                         if friend_user:
-                            controller.add_friend(current_user, friend_user)
+                            controller.addFriend(current_user, friend_user)
                         else:
                             print("No user found with that email.\n")
                     else:
                         print("Please log in first to add friends.\n")
 
-                if choice == '2':  # Remove friend
+                if choice == '2': # Remove friend
                     if current_user:
                         friend_email = input("Enter the email of the friend to remove: ")
                         friend_user = controller.get_user_by_email(friend_email)
 
                         if friend_user:
-                            controller.remove_friend(current_user, friend_user)
+                            controller.removeFriend(current_user, friend_user)
                         else:
                             print("No user found with that email.\n")
                     else:
                         print("Please log in first to remove friends.\n")
 
-                if choice == '3': #View friends list
+                if choice == '3': #View friend's profile
+                    if current_user:
+                        friend_email = input("Enter your friend's email: ")
+                        friend_user = controller.get_user_by_email(friend_email)
+
+                        if friend_user:
+                            controller.displayProfile(friend_user)
+                        else:
+                            print("No user found with that email.\n")
+                    else:
+                        print("Please log in first to view friend profiles.\n")
+
+                if choice == '4': #View friends list
                     if current_user:
                         print("Fetching friends list...\n")
-                        #controller.viewFriendsList(current_user)
+                        controller.viewFriendsList(current_user)
                     else:
                         print("Please log in first to view your friends list.\n")
 

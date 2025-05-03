@@ -163,17 +163,23 @@ class PostgresHandler(AbstractDataHandler):
     def saveSuggestion(self, suggestion: Suggestion):
         pass
 
-    def saveFriend(self, friend: Friend):
+    def saveFriend(self, user: User, friend: User):
         cursor = self.postgres.getSession()
+
+        # Get current friend list
         cursor.execute("""
-            INSERT INTO friends (user_id, friend_id)
-            VALUES (%s, %s), (%s, %s)
-            ON CONFLICT DO NOTHING
-        """, (
-            friend.user.userID, friend.friend.userID,
-            friend.friend.userID, friend.user.userID 
-        ))
-        self.postgres.getConnection().commit()
+            SELECT friends FROM users WHERE user_id = %s
+        """, (user.userID,))
+        result = cursor.fetchone()
+        current_friends = result['friends'] if result and result['friends'] else []
+
+        # Avoid duplicates
+        if friend.email not in current_friends:
+            current_friends.append(friend.email)
+            cursor.execute("""
+                UPDATE users SET friends = %s WHERE user_id = %s
+            """, (current_friends, user.userID))
+            self.postgres.getConnection().commit()
 
     def deleteUser(self, user: User):
         pass
@@ -187,17 +193,48 @@ class PostgresHandler(AbstractDataHandler):
     def deleteSuggestion(self, suggestion: Suggestion):
         pass
 
-    def deleteFriend(self, friend: Friend):
+    def deleteFriend(self, user: User, friend: User):
         cursor = self.postgres.getSession()
+
+        # Get current friends
         cursor.execute("""
-            DELETE FROM friends
-            WHERE (user_id = %s AND friend_id = %s)
-            OR (user_id = %s AND friend_id = %s)
-        """, (
-            friend.user.userID, friend.friend.userID,
-            friend.friend.userID, friend.user.userID
-        ))
-        self.postgres.getConnection().commit()
+            SELECT friends FROM users WHERE user_id = %s
+        """, (user.userID,))
+        result = cursor.fetchone()
+        current_friends = result['friends'] if result and result['friends'] else []
+
+        # Remove if exists
+        if friend.email in current_friends:
+            current_friends.remove(friend.email)
+            cursor.execute("""
+                UPDATE users SET friends = %s WHERE user_id = %s
+            """, (current_friends, user.userID))
+            self.postgres.getConnection().commit()
+
+    def getFriends(self, user: User) -> list:
+        cursor = self.postgres.getSession()
+        
+        # Get list of friend emails
+        cursor.execute("""
+            SELECT friends FROM users WHERE user_id = %s
+        """, (user.userID,))
+        result = cursor.fetchone()
+        emails = result['friends'] if result and result['friends'] else []
+
+        # Now fetch user info for each friend email
+        if not emails:
+            return []
+
+        query = """
+            SELECT username, email FROM users
+            WHERE email = ANY(%s)
+        """
+        cursor.execute(query, (emails,))
+        rows = cursor.fetchall()
+
+        from user import User
+        return [User(None, row['username'], row['email'], None) for row in rows]
+
 
     #helper function
     def getUserByEmail(self, email):

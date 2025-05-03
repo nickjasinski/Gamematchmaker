@@ -3,6 +3,7 @@ from game_service import GameService
 from user import User
 import wishlist
 from wishlist_service import WishlistService
+from review import Review
 
 class Controller:
     def __init__(self):
@@ -36,8 +37,9 @@ class Controller:
 
 
     def displayProfile(self, user):
+        profile = self.profile_service.getProfile(user)
+
         if user.profile:
-            profile = user.profile
             print("\n--- Profile Information ---")
             print(f"Name: {profile.name}")
             print(f"Favorite Game: {profile.favorite_game}")
@@ -117,6 +119,24 @@ class Controller:
     def dislikeReview(self, review):
         self.data_handler.dislikeReview(review)
 
+    from review import Review
+
+    def view_review_by_id(self, review_id):
+        review = self.data_handler.getReviewById(int(review_id))  # make sure it's an int
+
+        if review:
+            print("\n--- Review Details ---")
+            print(f"Review ID: {review.reviewId}")
+            print(f"User ID: {review.userID}")
+            print(f"Game ID: {review.gameID}")
+            print(f"Content: {review.content}")
+            print(f"Rating: {review.rating}/5")
+            print(f"Likes: {review.likes}")
+            print(f"Dislikes: {review.dislikes}")
+            print("------------------------\n")
+        else:
+            print("No review found with that ID.\n")
+
     def search_game_by_title_return_game(self, title):
         fetcher = IGDBFetcher()
         service = GameService(fetcher)
@@ -128,17 +148,25 @@ class Controller:
         else:
             return None
         
-    def add_friend(self, user, friend):
-        from friend import Friend
-        friendship = Friend(user, friend)
-        friendship.add()
-        self.data_handler.saveFriend(friendship)
+    def addFriend(self, current_user: User, friend_user: User):
+        self.data_handler.saveFriend(current_user, friend_user)
+        print(f"{friend_user.username} has been added to your friend list.")
+
+    def removeFriend(self, current_user: User, friend_user: User):
+        self.data_handler.deleteFriend(current_user, friend_user)
+        print(f"{friend_user.username} has been removed from your friend list.")
+
+    def viewFriendsList(self, user: User):
+        friends = self.data_handler.getFriends(user)
+        if not friends:
+            print("You have no friends added yet.\n")
+            return
+
+        print("\n--- Your Friends ---")
+        for friend in friends:
+            print(f"- {friend.username} ({friend.email})")
+        print("---------------------\n")
+
 
     def get_user_by_email(self, email):
         return self.data_handler.getUserByEmail(email)
-    
-    def remove_friend(self, user, friend):
-        from friend import Friend
-        friendship = Friend(user, friend)
-        friendship.remove()
-        self.data_handler.deleteFriend(friendship)
