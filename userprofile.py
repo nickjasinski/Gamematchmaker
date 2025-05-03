@@ -1,11 +1,13 @@
-from game import Game
+#duplicate of user_profile.py - this file was conflicting with it
 
-class Profile:
-    def __init__(self, profileId: int, name: str, favoriteGame: Game, bio: str):
-        self.profileId = profileId
-        self.name = name
-        self.favoriteGame = favoriteGame
-        self.bio = bio
+# from game import Game
 
-    def editProfile(self, name: str, favoriteGame: Game, bio: str) -> bool:
-        pass
+# class Profile:
+#     def __init__(self, profileId: int, name: str, favoriteGame: Game, bio: str):
+#         self.profileId = profileId
+#         self.name = name
+#         self.favoriteGame = favoriteGame
+#         self.bio = bio
+
+#     def editProfile(self, name: str, favoriteGame: Game, bio: str) -> bool:
+#         pass
