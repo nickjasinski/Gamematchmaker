@@ -39,6 +39,15 @@ class PostgresHandler(AbstractDataHandler):
         """, (profile.user.userID, profile.name, profile.favorite_game, profile.bio))
         self.postgres.getConnection().commit()
 
+    # Deletes the profile from the database
+    def deleteProfile(self, user_id: int):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+            DELETE FROM profiles
+            WHERE user_id = %s
+        """, (user_id,))
+        self.postgres.getConnection().commit()
+
     # Fetches the profile for the specified user_id from the database
     def getProfile(self, user_id):
         cursor = self.postgres.getSession()
@@ -47,7 +56,6 @@ class PostgresHandler(AbstractDataHandler):
         """, (user_id,))
         data = cursor.fetchone()
         return data
-
 
     # Fetches the user from the database by email and password
     def getUserByCredentials(self, email, password):
@@ -82,6 +90,49 @@ class PostgresHandler(AbstractDataHandler):
         review_id = cursor.fetchone()['review_id']
         self.postgres.getConnection().commit()
         review.reviewId = review_id
+
+    #Adds a like to the review in the database
+    def likeReview(self, review: Review):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+        UPDATE reviews
+        SET likes = likes + 1
+        WHERE review_id = %s
+        """, (review.reviewId,))
+        
+        self.postgres.getConnection().commit()
+
+    #Adds a dislike to the review in the database
+    def dislikeReview(self, review: Review):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+        UPDATE reviews
+        SET dislikes = dislikes + 1
+        WHERE review_id = %s
+        """, (review.reviewId,))
+
+        self.postgres.getConnection().commit()
+    
+    #Fetches the review by ID from the database
+    def getReviewById(self, review_id: int):
+        cursor = self.postgres.getSession()
+        cursor.execute("""
+        SELECT * FROM reviews WHERE review_id = %s
+        """, (review_id,))
+        result = cursor.fetchone()
+    
+        if result:
+            return Review(
+                reviewId=result['review_id'],
+                userID=result['user_id'],
+                gameID=result['game_id'],
+                content=result['content'],
+                rating=result['rating'],
+                likes=result.get('likes', 0),
+                dislikes=result.get('dislikes', 0)
+            )
+        else:
+            return None
 
     def savePreference(self, preferences: Preferences):
         pass
@@ -130,7 +181,6 @@ class PostgresHandler(AbstractDataHandler):
             """, (current_friends, user.userID))
             self.postgres.getConnection().commit()
 
-
     def deleteUser(self, user: User):
         pass
 
@@ -161,6 +211,31 @@ class PostgresHandler(AbstractDataHandler):
             """, (current_friends, user.userID))
             self.postgres.getConnection().commit()
 
+    def getFriends(self, user: User) -> list:
+        cursor = self.postgres.getSession()
+        
+        # Get list of friend emails
+        cursor.execute("""
+            SELECT friends FROM users WHERE user_id = %s
+        """, (user.userID,))
+        result = cursor.fetchone()
+        emails = result['friends'] if result and result['friends'] else []
+
+        # Now fetch user info for each friend email
+        if not emails:
+            return []
+
+        query = """
+            SELECT username, email FROM users
+            WHERE email = ANY(%s)
+        """
+        cursor.execute(query, (emails,))
+        rows = cursor.fetchall()
+
+        from user import User
+        return [User(None, row['username'], row['email'], None) for row in rows]
+
+
     #helper function
     def getUserByEmail(self, email):
         cursor = self.postgres.getSession()
@@ -174,5 +249,3 @@ class PostgresHandler(AbstractDataHandler):
                 password=result['password']
             )
         return None
-
-
