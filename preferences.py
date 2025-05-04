@@ -14,7 +14,7 @@ class Preferences:
         while True:
             print("")
             print("Which Preference would you like to edit?")
-            print("1. Change Preferred Game")
+            print("1. Change Preferred Genre")
             print("2. Change Preferred Platform")
             print("3. Change Multiplayer Preference")
             print("")
@@ -27,16 +27,16 @@ class Preferences:
                 break
             print("\n")
             if choice == "1":
-                print("Changing Preferred Genre")
+                print("Changing Preferred Genre\n")
                 new_genre = input("What Genre would you like to have? ")
                 self.preferredGenre = new_genre
             elif choice == "2":
-                print("\nChanging Preferred Platform")
+                print("Changing Preferred Platform\n")
                 new_platform = input("What platform would you like to have? ")
                 self.preferredPlatform = new_platform
 
             elif choice == "3":
-                print("\nChanging Multiplayer Preference")
+                print("Changing Multiplayer Preference\n")
                 new_mp = input("Do you prefer multiplayer games? (yes/no): ").strip().lower()
                 self.multiplayerPreference = new_mp == "yes"
 

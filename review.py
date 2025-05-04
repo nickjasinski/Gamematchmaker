@@ -1,10 +1,10 @@
 from typing import Optional
 
 class Review:
-    def __init__(self, reviewId: Optional[int], userID: int, gameID: int, content: str, rating: int, likes: int = 0, dislikes: int = 0):
+    def __init__(self, reviewId: Optional[int], userID: int, gameName: str, content: str, rating: int, likes: int = 0, dislikes: int = 0):
         self.reviewId = reviewId
         self.userID = userID
-        self.gameID = gameID
+        self.gameName = gameName
         self.content = content
         self.rating = rating
         self.likes = likes

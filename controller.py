@@ -128,7 +128,7 @@ class Controller:
             print("\n--- Review Details ---")
             print(f"Review ID: {review.reviewId}")
             print(f"User ID: {review.userID}")
-            print(f"Game ID: {review.gameID}")
+            print(f"Game Name: {review.gameName}")
             print(f"Content: {review.content}")
             print(f"Rating: {review.rating}/5")
             print(f"Likes: {review.likes}")
@@ -136,6 +136,17 @@ class Controller:
             print("------------------------\n")
         else:
             print("No review found with that ID.\n")
+
+    def writeReview(self, user: User, gameName: str, content: str, rating: int):
+        review = Review(
+            reviewId=None,
+            userID=user.userID,
+            gameName=gameName,
+            content=content,
+            rating=rating
+        )
+        self.saveReview(review)
+        print("Review was submitted successfully!\n")
 
     def search_game_by_title_return_game(self, title):
         fetcher = IGDBFetcher()
@@ -150,11 +161,11 @@ class Controller:
         
     def addFriend(self, current_user: User, friend_user: User):
         self.data_handler.saveFriend(current_user, friend_user)
-        print(f"{friend_user.username} has been added to your friend list.")
+        print(f"\n{friend_user.username} has been added to your friend list.")
 
     def removeFriend(self, current_user: User, friend_user: User):
         self.data_handler.deleteFriend(current_user, friend_user)
-        print(f"{friend_user.username} has been removed from your friend list.")
+        print(f"\n{friend_user.username} has been removed from your friend list.")
 
     def viewFriendsList(self, user: User):
         friends = self.data_handler.getFriends(user)

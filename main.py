@@ -3,10 +3,11 @@ from igdb_fetcher import IGDBFetcher
 from game_service import GameService
 from preferences import Preferences
 from block import Block
+from suggestion import Suggestion
 
 
 def main_menu():
-    print("\n==== Video Game Finder ====")
+    print("\n==== GameMatch Recommender ====")
     print("1. Sign Up")
     print("2. Log In")
     print("3. Search for Game Title")
@@ -16,8 +17,8 @@ def main_menu():
     print("7. Block Menu")
     print("8. Profile Menu")
     print("9. Manage Preferences")
-    
-    print("10. Search for Game Recommendations")
+    print("10. Add Suggestion")
+    print("11. Search for Game Recommendations")
     print("0. Exit\n")
     return input("Choose an option: ")
 
@@ -30,6 +31,11 @@ def run():
                 preferredGenre="None",
                 preferredPlatform="None",
                 multiplayerPreference=True)
+    
+    suggest = Suggestion(
+                suggestionId=1,
+                content="fix bugs in the game")
+
     while True:
         choice = main_menu()
 
@@ -79,20 +85,11 @@ def run():
                     if current_user:
                         print("Writing a review ...\n")
 
-                        game_title = input("Enter the title of the game you want to review: ")
-                        game = controller.search_game_by_title_return_game(game_title)
+                        game_name = input("Enter the name of the game you want to review: ")
+                        content = input("Enter your review: ")
+                        rating = int(input("Enter a rating (1-5): "))
 
-                        if game:
-                            content = input("Enter your review: ")
-                            rating = int(input("Enter a rating (1-5): "))
-
-                            new_review = current_user.writeReview(game, content, rating)
-
-                            controller.saveReview(new_review)
-
-                            print("Review was submitted successfully!\n")
-                        else:
-                            print("Game not found. Please try again.\n")
+                        controller.writeReview(current_user, game_name, content, rating)
                     else:
                         print("You must be logged in to write a review.\n")
 
@@ -175,7 +172,7 @@ def run():
                     else:
                         print("Please log in first to view your friends list.\n")
 
-        elif choice == '7':
+        elif choice == '7': #Block users
             blocker.blockusers()
 
         elif choice == '8': #Profile menu
@@ -225,8 +222,10 @@ def run():
         elif choice == '9': #Manage preferences
             preferences.updatePreferences()
 
-                
-        elif choice == '10': #Game recommendations
+        elif choice == '10': #Add suggestion
+            suggest.addSuggestion()
+
+        elif choice == '11': #Game recommendations
             print("Searching for game recommendations ...\n")
             controller.search_recommended_games()
  

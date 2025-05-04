@@ -93,10 +93,10 @@ class PostgresHandler(AbstractDataHandler):
     def saveReview(self, review: Review):
         cursor = self.postgres.getSession()
         cursor.execute("""
-        INSERT INTO reviews (user_id, game_id, content, rating)
+        INSERT INTO reviews (user_id, game_name, content, rating)
         VALUES (%s, %s, %s, %s)
         RETURNING review_id
-        """, (review.userID, review.gameID, review.content, review.rating))
+        """, (review.userID, review.gameName, review.content, review.rating))
     
         review_id = cursor.fetchone()['review_id']
         self.postgres.getConnection().commit()
@@ -136,7 +136,7 @@ class PostgresHandler(AbstractDataHandler):
             return Review(
                 reviewId=result['review_id'],
                 userID=result['user_id'],
-                gameID=result['game_id'],
+                gameName=result['game_name'],
                 content=result['content'],
                 rating=result['rating'],
                 likes=result.get('likes', 0),
