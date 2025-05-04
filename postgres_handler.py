@@ -15,16 +15,27 @@ class PostgresHandler(AbstractDataHandler):
 
     # Saves the user to the database
     def saveUser(self, user):
-        cursor = self.postgres.getSession()
-        cursor.execute("""
-            INSERT INTO users (username, email, password)
-            VALUES (%s, %s, %s)
-            RETURNING user_id
-        """, (user.username, user.email, user.password))
-        user_id = cursor.fetchone()['user_id']
-        self.postgres.getConnection().commit()
-        user.userID = user_id
-        return user
+        # Validate user data
+        if not user.username or not user.email or not user.password:
+            raise ValueError("Invalid user data: username, email, and password are required.")
+
+        session = self.postgres.getSession()
+        try:
+            session.execute(
+                """
+                INSERT INTO users (username, email, password)
+                VALUES (%s, %s, %s)
+                RETURNING user_id
+                """,
+                (user.username, user.email, user.password)
+            )
+            user_id = session.fetchone()["user_id"]
+            self.postgres.getConnection().commit()
+            user.userID = user_id
+            return user
+        except Exception as e:
+            self.postgres.getConnection().rollback()
+            raise e
 
     # Saves the profile to the database
     def saveProfile(self, profile):
