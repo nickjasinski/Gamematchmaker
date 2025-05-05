@@ -138,6 +138,9 @@ class Controller:
             print("No review found with that ID.\n")
 
     def writeReview(self, user: User, gameName: str, content: str, rating: int):
+        if rating < 1 or rating > 5:
+            raise ValueError("Rating must be between 1 and 5.")
+
         review = Review(
             reviewId=None,
             userID=user.userID,
@@ -146,6 +149,7 @@ class Controller:
             rating=rating
         )
         self.saveReview(review)
+
         print("Review was submitted successfully!\n")
 
     def search_game_by_title_return_game(self, title):
